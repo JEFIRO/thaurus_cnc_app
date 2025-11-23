@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "54938412063",
+    "project_id": "thauruscnc-861da",
+    "storage_bucket": "thauruscnc-861da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54938412063:android:ee253547d4c02d411fe12a",
+        "android_client_info": {
+          "package_name": "com.jefiro_dev.thaurus_cnc.thaurus_cnc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjSOTmuLXw87-Eix1_zu8nP-Z81J0BpDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
