@@ -4,8 +4,6 @@ import 'package:thaurus_cnc/model/cliente/ClienteModel.dart';
 
 
 class ClienteService {
-  //final String baseUrl = 'http://31.97.165.102/api/clientes';
- // final String baseUrl = 'http://192.168.86.7:8080/api/clientes';
   final String baseUrl = 'https://www.thauruscnc.com.br/api/clientes';
 
   Future<bool> criarCliente(ClienteModel pedido) async {

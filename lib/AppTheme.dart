@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Cores de Fundo e Texto (Mantidas)
   static const grafiteProfundo = Color(0xFF2B2B2B);
   static const cinzaEscuro = Color(0xFF3A3A3A);
   static const cinzaMedio = Color(0xFF8D8D8D);
   static const cinzaClaro = Color(0xFFF1F1F1);
   static const branco = Color(0xFFFFFFFF);
 
-  // NOVA COR DE DESTAQUE: Azul Ciano suave
-  static const corDestaque = Color(0xFF0C3F57); // Um azul-ciano discreto
+  static const corDestaque = Color(0xFF0C3F57);
 
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: grafiteProfundo,
     useMaterial3: true,
 
-    // --- Cores principais ---
     colorScheme: const ColorScheme.dark(
-      primary: corDestaque, // Usando a nova cor
-      secondary: corDestaque, // Usando a nova cor
+      primary: corDestaque,
+      secondary: corDestaque,
       surface: grafiteProfundo,
       onPrimary: grafiteProfundo,
       onSecondary: cinzaClaro,
@@ -27,7 +24,7 @@ class AppTheme {
       background: grafiteProfundo,
     ),
 
-    // --- AppBar ---
+
     appBarTheme: const AppBarTheme(
       backgroundColor: grafiteProfundo,
       foregroundColor: branco,
@@ -40,7 +37,6 @@ class AppTheme {
       ),
     ),
 
-    // --- Textos ---
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         color: branco,
@@ -55,7 +51,6 @@ class AppTheme {
       ),
     ),
 
-    // --- Campos de texto ---
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: cinzaEscuro,
@@ -69,14 +64,13 @@ class AppTheme {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(
-            color: corDestaque, width: 2.0), // Destaque ao focar
+            color: corDestaque, width: 2.0),
       ),
     ),
 
-    // --- Botões principais ---
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: corDestaque, // Cor de destaque no botão principal
+        backgroundColor: corDestaque,
         foregroundColor: grafiteProfundo,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(
@@ -89,10 +83,9 @@ class AppTheme {
       ),
     ),
 
-    // --- Botões secundários ---
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: corDestaque), // Borda com destaque
+        side: const BorderSide(color: corDestaque),
         foregroundColor: corDestaque,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -101,19 +94,16 @@ class AppTheme {
       ),
     ),
 
-    // --- Ícones ---
     iconTheme: const IconThemeData(color: cinzaClaro, size: 24),
 
-    // --- Snackbar ---
     snackBarTheme: const SnackBarThemeData(
       backgroundColor: cinzaEscuro,
       contentTextStyle: TextStyle(color: branco),
       behavior: SnackBarBehavior.floating,
     ),
 
-    // --- Floating Action Button (FAB) ---
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: AppTheme.corDestaque, // Cor de destaque no FAB
+      backgroundColor: AppTheme.corDestaque,
       foregroundColor: AppTheme.grafiteProfundo,
     ),
   );

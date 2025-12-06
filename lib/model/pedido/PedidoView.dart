@@ -81,19 +81,15 @@ class _PedidoviewState extends State<Pedidoview> {
     setState(() {
       switch (criterio) {
         case "Data":
-        // CORREÇÃO: Usando o campo dataPedido (que é DateTime)
           pedidosFiltrados.sort((a, b) => b.dataPedido.compareTo(a.dataPedido));
           break;
         case "Valor":
-        // CORREÇÃO: Usando o campo valorTotal
           pedidosFiltrados.sort((a, b) => b.valorTotal.compareTo(a.valorTotal));
           break;
         case "Cliente":
-        // CORREÇÃO: Usando o campo clienteNome
           pedidosFiltrados.sort((a, b) => a.clienteNome.compareTo(b.clienteNome));
           break;
         case "ID":
-        // CORREÇÃO: Usando o campo pedidoId
           pedidosFiltrados.sort((a, b) => a.pedidoId.compareTo(b.pedidoId));
           break;
       }

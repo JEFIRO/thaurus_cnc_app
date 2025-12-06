@@ -1,22 +1,22 @@
 import 'package:thaurus_cnc/model/cliente/ClienteModel.dart';
 import '../FreteModel.dart';
 
-import 'PagamentosModel.dart'; // Importe a nova classe
 import '../PedidoItem.dart';
+import '../pagamentos/Pagamento.dart';
 import 'StatusPedido.dart';
 
 class PedidoModel {
   final int? id;
-  final String? idPedido; // Corresponde a 'id_Pedido'
+  final String? idPedido;
   final ClienteModel? cliente;
   final List<PedidoItem> itens;
-  final double? valorTotal; // Corresponde a 'valor_total'
-  final double? valorCustomizacao; // Corresponde a 'valor_customizacao'
+  final double? valorTotal;
+  final double? valorCustomizacao;
   final StatusPedido? status;
   final FreteModel? frete;
-  final PagamentosModel? pagamentos; // Corresponde a 'pagamentos'
-  final DateTime? dataPedido; // Corresponde a 'data_pedido'
-  final DateTime? dataFinalizacao; // Corresponde a 'data_finalizacao'
+  final Pagamentos? pagamentos;
+  final DateTime? dataPedido;
+  final DateTime? dataFinalizacao;
   final bool ativo;
 
   PedidoModel({
@@ -34,11 +34,10 @@ class PedidoModel {
     required this.ativo,
   });
 
-
   factory PedidoModel.fromJson(Map<String, dynamic> json) {
     return PedidoModel(
       id: json['id'] as int?,
-      idPedido: json['id_Pedido'] as String?, // Mapeamento direto
+      idPedido: json['id_Pedido'] as String?,
 
       cliente: json['cliente'] != null
           ? ClienteModel.fromJson(json['cliente'])
@@ -46,8 +45,8 @@ class PedidoModel {
 
       itens: json['itens'] != null
           ? List<PedidoItem>.from(
-        json['itens'].map((item) => PedidoItem.fromJson(item)),
-      )
+              json['itens'].map((item) => PedidoItem.fromJson(item)),
+            )
           : [],
 
       valorTotal: json['valor_total'] != null
@@ -60,12 +59,10 @@ class PedidoModel {
 
       status: StatusPedidoAdapter.fromString(json['status'] as String?),
 
-      frete: json['frete'] != null
-          ? FreteModel.fromJson(json['frete'])
-          : null,
+      frete: json['frete'] != null ? FreteModel.fromJson(json['frete']) : null,
 
-      pagamentos: json['pagamentos'] != null // Mapeamento do PagamentosModel
-          ? PagamentosModel.fromJson(json['pagamentos'])
+      pagamentos: json['pagamento'] != null
+          ? Pagamentos.fromJson(json['pagamento'])
           : null,
 
       dataPedido: json['data_pedido'] != null
@@ -79,7 +76,6 @@ class PedidoModel {
       ativo: json['ativo'] as bool? ?? false, // Mapeamento do 'boolean ativo'
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {

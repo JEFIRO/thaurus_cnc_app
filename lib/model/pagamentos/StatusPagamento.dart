@@ -1,0 +1,6 @@
+enum StatusPagamento {
+  PENDING_PAYMENT,
+  PAYMENT_ENTRY,
+  PAYMENT_COMPLETED,
+
+}

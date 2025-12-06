@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:thaurus_cnc/model/pagamentos/StatusPagamento.dart';
+
+import '../../AppTheme.dart';
 import '../PedidoItem.dart';
 import '../cliente/ClienteModel.dart';
 import 'PedidoModel.dart';
 import 'StatusPedido.dart';
+
 class DetalhesPedidoPage extends StatelessWidget {
   final Future<PedidoModel> pedidoFuture;
 
@@ -21,8 +25,6 @@ class DetalhesPedidoPage extends StatelessWidget {
       body: FutureBuilder<PedidoModel>(
         future: pedidoFuture,
         builder: (context, snapshot) {
-
-          // 1. Estado de Erro
           if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -33,20 +35,16 @@ class DetalhesPedidoPage extends StatelessWidget {
             );
           }
 
-          // 2. Estado de Carregamento
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Colors.amber),
             );
           }
 
-          // 3. ESTADO DE DADOS PRONTOS (SUCCESS)
           if (snapshot.hasData && snapshot.data != null) {
-            // Chama o widget de exibição do conteúdo final
             return _DetalhesPedidoPageContent(pedido: snapshot.data!);
           }
 
-          // 4. Estado Vazio
           return const Center(
             child: Text(
               "Nenhum dado de pedido encontrado.",
@@ -64,54 +62,109 @@ class _DetalhesPedidoPageContent extends StatelessWidget {
 
   _DetalhesPedidoPageContent({required this.pedido});
 
-  // --- Funções Auxiliares (Adapte-as para usar suas classes reais) ---
-
   Color _getStatusColor(StatusPedido? status) {
     if (status == null) return Colors.blueGrey;
+
     switch (status) {
-      case StatusPedido.IN_PRODUCTION: return Colors.amber.shade700;
-      case StatusPedido.COMPLETED: return Colors.green.shade600;
-      case StatusPedido.CANCELED: return Colors.red.shade600;
-      default: return Colors.blueGrey;
+      case StatusPedido.LAYOUT_PENDING:
+        return Colors.deepPurpleAccent;
+
+      case StatusPedido.PENDING_PAYMENT:
+        return Colors.orange.shade700;
+
+      case StatusPedido.IN_PRODUCTION:
+        return Colors.amber.shade700;
+
+      case StatusPedido.PREPARING_FOR_DELIVERY:
+        return Colors.lightBlue.shade700;
+
+      case StatusPedido.ON_THE_WAY:
+        return Colors.blue.shade600;
+
+      case StatusPedido.CANCLED:
+        return Colors.red.shade600;
+
+      case StatusPedido.DELIVERED:
+        return Colors.green.shade600;
+
+      default:
+        return Colors.blueGrey;
     }
   }
 
   String _formatStatus(StatusPedido? status) {
     if (status == null) return "Desconhecido";
+
     switch (status) {
-      case StatusPedido.IN_PRODUCTION: return "EM PRODUÇÃO";
-      case StatusPedido.COMPLETED: return "CONCLUÍDO";
-      case StatusPedido.CANCELED: return "CANCELADO";
-      case StatusPedido.LAYOUT_PENDING: return "LAYOUT PENDENTE";
+      case StatusPedido.LAYOUT_PENDING:
+        return "LAYOUT PENDENTE";
+
+      case StatusPedido.PENDING_PAYMENT:
+        return "PENDENTE DE PAGAMENTO";
+
+      case StatusPedido.IN_PRODUCTION:
+        return "EM PRODUÇÃO";
+
+      case StatusPedido.PREPARING_FOR_DELIVERY:
+        return "PREPARANDO ENTREGA";
+
+      case StatusPedido.ON_THE_WAY:
+        return "A CAMINHO";
+
+      case StatusPedido.CANCLED:
+        return "CANCELADO";
+
+      case StatusPedido.DELIVERED:
+        return "CONCLUÍDO";
     }
   }
 
-  final _currencyFormat = NumberFormat.currency(
-    locale: 'pt_BR',
-    symbol: 'R\$',
-  );
+  String _formatStatusPagamento(StatusPagamento? status) {
+    if (status == null) return "Desconhecido";
 
-  // Estilos base
+    switch (status) {
+      case StatusPagamento.PENDING_PAYMENT:
+        return "Aguardando pagamento";
+
+      case StatusPagamento.PAYMENT_ENTRY:
+        return "Entrada registrada";
+
+      case StatusPagamento.PAYMENT_COMPLETED:
+        return "Pagamento concluído";
+    }
+  }
+
+  final _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+
   static const Color grafiteProfundo = Color(0xFF2B2B2B);
   static const Color cinzaEscuro = Color(0xFF3A3A3A);
   static const Color cinzaMedio = Color(0xFF8D8D8D);
   static const Color branco = Color(0xFFFFFFFF);
 
-  // Widget de linha de detalhe
-  Widget _buildDetailRow(String label, String value, {Color valueColor = branco}) {
+  Widget _buildDetailRow(
+    String label,
+    String value, {
+    Color valueColor = branco,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(color: cinzaMedio, fontSize: 14)),
-          Text(value, style: TextStyle(color: valueColor, fontWeight: FontWeight.w500, fontSize: 15)),
+          Text(
+            value,
+            style: TextStyle(
+              color: valueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 15,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // Widget de título de seção
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
@@ -127,13 +180,10 @@ class _DetalhesPedidoPageContent extends StatelessWidget {
     );
   }
 
-  // Widget para Item Card (Necessita que PedidoItem e MedidaModel estejam definidos)
   Widget _buildItemCard(PedidoItem item) {
-    // Implementação do Card do Item
-    return const Card(color: cinzaEscuro, child: Padding(padding: EdgeInsets.all(16), child: Text("Detalhes do Item")));
+    return _buildItemSection(item);
   }
 
-  // Widget para Cabeçalho
   Widget _buildHeaderSection() {
     final statusColor = _getStatusColor(pedido.status);
     return Container(
@@ -152,10 +202,16 @@ class _DetalhesPedidoPageContent extends StatelessWidget {
               Text(
                 'Pedido #${pedido.id ?? 'N/A'}',
                 style: const TextStyle(
-                    color: branco, fontSize: 22, fontWeight: FontWeight.bold),
+                  color: branco,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
@@ -172,56 +228,220 @@ class _DetalhesPedidoPageContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          _buildDetailRow("ID UUID", pedido.idPedido ?? 'N/A', valueColor: cinzaMedio),
-          _buildDetailRow("Data/Hora", pedido.dataPedido != null ? DateFormat('dd/MM/yyyy HH:mm').format(pedido.dataPedido!) : 'N/A'),
+          _buildDetailRow(
+            "ID UUID",
+            pedido.idPedido ?? 'N/A',
+            valueColor: cinzaMedio,
+          ),
+          _buildDetailRow(
+            "Data/Hora",
+            pedido.dataPedido != null
+                ? DateFormat('dd/MM/yyyy HH:mm').format(pedido.dataPedido!)
+                : 'N/A',
+          ),
         ],
       ),
     );
   }
 
-  // Widget para Valores Totais (Necessita de FreteModel)
   Widget _buildTotalSection() {
-    final subtotal = pedido.itens.fold(0.0, (sum, item) => sum + (item.valor * item.quantidade));
+    final subtotal = pedido.itens.fold(
+      0.0,
+      (sum, item) => sum + (item.valor * item.quantidade),
+    );
     final freteValor = pedido.frete?.valorFrete ?? 0.0;
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: cinzaEscuro, borderRadius: BorderRadius.circular(12)),
-      child: Column(children: [
-        _buildDetailRow("Subtotal Itens", _currencyFormat.format(subtotal)),
-        _buildDetailRow("Frete (${pedido.frete?.metodo ?? 'Não Definido'})", _currencyFormat.format(freteValor)),
-        const Divider(color: Colors.white12, height: 20),
-        _buildDetailRow("Valor Total", _currencyFormat.format(pedido.valorTotal ?? subtotal + freteValor), valueColor: Colors.greenAccent),
-      ],),
+      decoration: BoxDecoration(
+        color: cinzaEscuro,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          _buildDetailRow("Subtotal Itens", _currencyFormat.format(subtotal)),
+          _buildDetailRow(
+            "Frete (${pedido.frete?.metodo ?? 'Não Definido'})",
+            _currencyFormat.format(freteValor),
+          ),
+          const Divider(color: Colors.white12, height: 20),
+          _buildDetailRow(
+            "Valor Total",
+            _currencyFormat.format(pedido.valorTotal ?? subtotal + freteValor),
+            valueColor: Colors.greenAccent,
+          ),
+        ],
+      ),
     );
   }
 
-  // Widget para Cliente (Necessita de ClienteModel)
+  Widget _buildItemSection(PedidoItem item) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: cinzaEscuro,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            item.nomeProduto,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.branco,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          _buildDetailRow(
+            "Valor",
+            "R\$ ${(item.variante?.valor ?? 0).toStringAsFixed(2)}",
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Medidas do Produto",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.branco,
+            ),
+          ),
+          _buildDetailRow(
+            "Altura",
+            '${item.variante?.medida_produto.altura} Cm',
+          ),
+          _buildDetailRow(
+            "Largura",
+            '${item.variante?.medida_produto.largura} Cm',
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Personalização",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.branco,
+            ),
+          ),
+          SizedBox(height: 8),
+          _buildPersonalizacaoSection(item.personalizacao),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPersonalizacaoSection(Map<String, dynamic> personalizacao) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...List.generate(personalizacao.length, (i) {
+            final chave = personalizacao.keys.elementAt(i);
+            final valor = personalizacao.values.elementAt(i);
+            return _buildDetailRow(chave, valor.toString());
+          }),
+        ],
+      ),
+    );
+  }
+
   Widget _buildClientSection(ClienteModel cliente) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: cinzaEscuro, borderRadius: BorderRadius.circular(12)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildDetailRow("Nome", cliente.nome!),
-        _buildDetailRow("Telefone", cliente.telefone!),
-        _buildDetailRow("Email", cliente.email!),
-      ],),
+      decoration: BoxDecoration(
+        color: cinzaEscuro,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDetailRow("Nome", cliente.nome!),
+          _buildDetailRow("Telefone", cliente.telefone!),
+          _buildDetailRow("Email", cliente.email!),
+        ],
+      ),
     );
   }
 
-  // Widget para Pagamento
   Widget _buildPaymentSection() {
     final pagamentoId = pedido.pagamentos?.id;
-    final statusColor = (pagamentoId != null) ? Colors.lightBlueAccent : Colors.redAccent;
+
+    final pagamento = pedido.pagamentos!;
+
+    final statusColor = (pagamentoId != null)
+        ? Colors.lightBlueAccent
+        : Colors.redAccent;
+
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: cinzaEscuro, borderRadius: BorderRadius.circular(12)),
-      child: _buildDetailRow("ID do Pagamento", pagamentoId?.toString() ?? 'Não Iniciado', valueColor: statusColor),
+      decoration: BoxDecoration(
+        color: cinzaEscuro,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'ID do Pagamento #${pagamento.id}',
+                style: const TextStyle(
+                  color: branco,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  _formatStatusPagamento(
+                    pagamento.status,
+                  ).toUpperCase(),
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          _buildDetailRow(
+            "Uuid",
+            pedido.pagamentos!.idPagamento.toString(),
+            valueColor: statusColor,
+          ),
+
+          _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorRestante}"),
+          _buildDetailRow("Valor a pago", "R\$ ${pagamento.valorPago}"),
+          _buildDetailRow("Valor a Total", "R\$ ${pagamento.valorTotal}"),
+
+          _buildDetailRow(
+            "Data/Hora",
+            pedido.dataPedido != null
+                ? DateFormat('dd/MM/yyyy HH:mm').format(pagamento.dataCadastro!)
+                : 'N/A',
+          ),
+
+        ],
+      ),
     );
   }
 
-
-  // --- Método Build Principal do Conteúdo ---
+  // Widget _buildPaymentSection()
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

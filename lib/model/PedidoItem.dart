@@ -7,7 +7,7 @@ class PedidoItem {
   final String nomeProduto; // Mapeado do DTO/JSON ('nome_Produto')
   final Variante? variante; // Corresponde ao relacionamento ManyToOne 'variante'
 
-  // Corresponde ao Map<String, Object> personalizacao do Java
+
   final Map<String, dynamic> personalizacao;
 
   final int quantidade; // Corresponde a 'quantidade'

@@ -37,12 +37,11 @@ class Pedidoservice {
     if (response.statusCode == 200) {
       print('✅ Pedido ${id} carregado com sucesso!');
 
-
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-    print(PedidoModel.fromJson(data).toString());
-      return PedidoModel.fromJson(data);
+      print(PedidoModel.fromJson(data).toString());
 
+      return PedidoModel.fromJson(data);
     } else if (response.statusCode == 404) {
       print('❌ Pedido ${id} não encontrado.');
       print(response.body);
@@ -60,19 +59,14 @@ class Pedidoservice {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      // 1. Decodifica a string JSON em um Map<String, dynamic>
       final Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
 
-      // 2. Mapeia o Map completo para o modelo de resposta paginada
       final responseModel = PedidoListResponse.fromJson(jsonDecoded);
 
-      // 3. Imprime a lista de conteúdo para debug
       print(responseModel.content);
 
-      // 4. Retorna apenas a lista de itens (List<PedidoResumoModel>) contida no campo 'content'
       return responseModel.content;
     } else {
-      // Lança exceção em caso de erro HTTP
       throw Exception(
         'Erro ao carregar pedidos: Status ${response.statusCode}',
       );

@@ -1,8 +1,11 @@
 enum StatusPedido {
   LAYOUT_PENDING,
+  PENDING_PAYMENT,
   IN_PRODUCTION,
-  COMPLETED,
-  CANCELED,
+  PREPARING_FOR_DELIVERY,
+  ON_THE_WAY,
+  CANCLED,
+  DELIVERED,
 }
 
 class StatusPedidoAdapter {
@@ -10,7 +13,8 @@ class StatusPedidoAdapter {
     if (status == null) return null;
     try {
       return StatusPedido.values.firstWhere(
-              (e) => e.toString().split('.').last == status.toUpperCase());
+        (e) => e.toString().split('.').last == status.toUpperCase(),
+      );
     } catch (_) {
       return null;
     }
