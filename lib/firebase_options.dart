@@ -59,5 +59,4 @@ class DefaultFirebaseOptions {
     projectId: 'thauruscnc-861da',
     storageBucket: 'thauruscnc-861da.firebasestorage.app',
   );
-
 }

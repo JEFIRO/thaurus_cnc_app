@@ -7,7 +7,7 @@ val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 } else {
-    println("⚠️ key.properties não encontrado!")
+    println("key.properties não encontrado!")
 }
 
 plugins {
