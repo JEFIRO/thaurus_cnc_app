@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:thaurus_cnc/app_theme.dart';
 import 'package:thaurus_cnc/model/Produto/medida_model.dart';
 import 'package:thaurus_cnc/model/Produto/produto_model.dart';
 import 'package:thaurus_cnc/model/Produto/variante.dart';
 import 'package:thaurus_cnc/service/produto_service.dart';
+
+import '../../service/DriveService.dart';
 
 class ProdutoFormPage extends StatefulWidget {
   final ProdutoModel? produtoModel;
@@ -27,7 +28,6 @@ class _ProdutoFormPageState extends State<ProdutoFormPage> {
   final _idController = TextEditingController();
   final _descricaoController = TextEditingController();
   final _imgController = TextEditingController();
-  final supabase = Supabase.instance.client;
 
   List<Map<String, TextEditingController>> personalizacoes = [];
   List<VarianteForm> variantesForm = [];
@@ -234,7 +234,6 @@ class _ProdutoFormPageState extends State<ProdutoFormPage> {
     );
   }
 
-  // Lógica de salvar/atualizar
   Future<void> _handleSaveOrUpdate() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -250,21 +249,9 @@ class _ProdutoFormPageState extends State<ProdutoFormPage> {
     try {
       String? publicUrl;
       if (_pickedImageFile != null) {
-        final fileName = path.basename(_pickedImageFile!.path);
-        final bytes = await _pickedImageFile!.readAsBytes();
+        File imageFile = File(_pickedImageFile!.path);
 
-        await supabase.storage
-            .from('images')
-            .uploadBinary(
-              fileName,
-              bytes,
-              fileOptions: const FileOptions(
-                upsert: true,
-                contentType: 'image/jpeg',
-              ),
-            );
-
-        publicUrl = supabase.storage.from('images').getPublicUrl(fileName);
+        publicUrl = await DriveService().enviaImagem(imageFile);
       }
 
       final produto = ProdutoModel(

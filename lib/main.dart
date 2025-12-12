@@ -4,17 +4,10 @@ import 'package:thaurus_cnc/screens/home_page.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Supabase.initialize(
-    url: 'https://zefsfnmvlkowzxnypeja.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplZnNmbm12bGtvd3p4bnlwZWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExNzQwMzUsImV4cCI6MjA3Njc1MDAzNX0.faMFciziqqlAlX3v186URBFU5g1ASp3nlhAJlEljmWw',
-  );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
