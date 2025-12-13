@@ -52,16 +52,19 @@ class PedidoCard extends StatelessWidget {
         side: BorderSide(color: statusColor.withOpacity(0.3), width: 1.0),
       ),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           Future<PedidoModel> pedidoResponseFuture = Pedidoservice().getPedido(
             pedido.pedidoId,
           );
 
+          final pedidos = await pedidoResponseFuture;
+
+          print(pedidos.toString());
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  PedidoDetalhePage(pedidoFuture: pedidoResponseFuture),
+              builder: (context) => PedidoDetalhePage(pedido: pedidos),
             ),
           );
         },

@@ -31,7 +31,6 @@ class DriveService {
     print(jsonResp["url"]);
 
 
-
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('✅ Imagem enviada com sucesso!');
       print('Link da imagem: $jsonResp["url"]');

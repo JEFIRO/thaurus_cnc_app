@@ -8,9 +8,9 @@ import 'package:thaurus_cnc/model/pedido/pedido_model.dart';
 import 'package:thaurus_cnc/model/pedido/status_pedido.dart';
 
 class PedidoDetalhePage extends StatelessWidget {
-  final Future<PedidoModel> pedidoFuture;
+  final PedidoModel pedido;
 
-  const PedidoDetalhePage({super.key, required this.pedidoFuture});
+  const PedidoDetalhePage({super.key, required this.pedido});
 
   @override
   Widget build(BuildContext context) {
@@ -20,38 +20,7 @@ class PedidoDetalhePage extends StatelessWidget {
         backgroundColor: const Color(0xFF2B2B2B),
       ),
       backgroundColor: const Color(0xFF2B2B2B),
-
-      body: FutureBuilder<PedidoModel>(
-        future: pedidoFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                "❌ Erro ao buscar pedido: ${snapshot.error}",
-                style: const TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.amber),
-            );
-          }
-
-          if (snapshot.hasData && snapshot.data != null) {
-            return _PedidoDetalhePageContent(pedido: snapshot.data!);
-          }
-
-          return const Center(
-            child: Text(
-              "Nenhum dado de pedido encontrado.",
-              style: TextStyle(color: Colors.white70),
-            ),
-          );
-        },
-      ),
+      body: _PedidoDetalhePageContent(pedido: pedido),
     );
   }
 }
@@ -423,7 +392,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           ),
 
           _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorRestante}"),
-          _buildDetailRow("Valor a pago", "R\$ ${pagamento.valorPago}"),
+          _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorPago ?? "00,00"}",),
           _buildDetailRow("Valor a Total", "R\$ ${pagamento.valorTotal}"),
 
           _buildDetailRow(
