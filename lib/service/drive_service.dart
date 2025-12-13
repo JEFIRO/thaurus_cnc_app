@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -25,10 +26,16 @@ class DriveService {
 
     final respStr = await response.stream.bytesToString();
 
+    final jsonResp = json.decode(respStr);
+
+    print(jsonResp["url"]);
+
+
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('✅ Imagem enviada com sucesso!');
-      print('Link da imagem: $respStr');
-      return respStr;
+      print('Link da imagem: $jsonResp["url"]');
+      return jsonResp["url"];
     } else {
       print('❌ Erro ao enviar imagem: ${response.statusCode}');
       print(respStr);

@@ -9,7 +9,7 @@ import 'package:thaurus_cnc/model/Produto/produto_model.dart';
 import 'package:thaurus_cnc/model/Produto/variante.dart';
 import 'package:thaurus_cnc/service/produto_service.dart';
 
-import '../../service/DriveService.dart';
+import '../../service/drive_service.dart';
 
 class ProdutoFormPage extends StatefulWidget {
   final ProdutoModel? produtoModel;
