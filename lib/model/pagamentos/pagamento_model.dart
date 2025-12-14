@@ -36,7 +36,7 @@ class PagamentosModel {
       pedidoUuid: json['pedido_uuid'],
       valorRestante: (json['valorRestante'] as num?)?.toDouble(),
       valorTotal: (json['valorTotal'] as num?)?.toDouble(),
-      valorPago: (json['valorPago'] as num?)!.toDouble(),
+      valorPago: json['valorPago'] ?? 0.00,
       dadosPagamentos: (json['dadosPagamentos'] as List<dynamic>? ?? [])
           .map((e) => DadosPagamentoModel.fromJson(e))
           .toList(),

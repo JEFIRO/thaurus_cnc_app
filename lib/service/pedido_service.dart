@@ -34,21 +34,11 @@ class Pedidoservice {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print('✅ Pedido ${id} carregado com sucesso!');
-
       final Map<String, dynamic> data = jsonDecode(response.body);
-
-      print(PedidoModel.fromJson(data).toString());
-
       return PedidoModel.fromJson(data);
     } else if (response.statusCode == 404) {
-      print('❌ Pedido ${id} não encontrado.');
-      print(response.body);
       throw Exception('Pedido não encontrado: ${response.statusCode}');
     } else {
-      print('❌ Erro ao carregar pedido ${id}: ${response.statusCode}');
-      print(response.body);
-      // Lança uma exceção em caso de erro no servidor
       throw Exception('Falha ao carregar pedido: ${response.statusCode}');
     }
   }

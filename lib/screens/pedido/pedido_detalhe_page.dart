@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:thaurus_cnc/app_theme.dart';
@@ -14,6 +15,8 @@ class PedidoDetalhePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print("object");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detalhes do Pedido"),
@@ -150,13 +153,24 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: cinzaMedio, fontSize: 14)),
-          Text(
-            value,
-            style: TextStyle(
-              color: valueColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 15,
+          Expanded(
+            flex: 0,
+            child: AutoSizeText(
+              label,
+              style: const TextStyle(color: cinzaMedio, fontSize: 14),
+              maxLines: 1,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: AutoSizeText(
+              value,
+              style: TextStyle(
+                color: valueColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
+              maxLines: 1,
             ),
           ),
         ],
@@ -190,7 +204,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: cinzaEscuro,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: statusColor.withOpacity(0.5)),
+        border: Border.all(color: statusColor.withAlpha((255.0 * 0.5).round())),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +226,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withAlpha((255.0 * 0.2).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -228,7 +242,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _buildDetailRow(
-            "ID UUID",
+            "ID UUID ",
             pedido.idPedido ?? 'N/A',
             valueColor: cinzaMedio,
           ),
@@ -259,13 +273,11 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Column(
         children: [
           _buildDetailRow("Subtotal Itens", _currencyFormat.format(subtotal)),
-          _buildDetailRow(
-            "Frete (${pedido.frete?.metodo ?? 'Não Definido'})",
-            _currencyFormat.format(freteValor),
-          ),
+          _buildDetailRow("Frete", _currencyFormat.format(freteValor)),
+          _buildDetailRow("(${pedido.frete?.metodo ?? 'Não Definido'})", ""),
           const Divider(color: Colors.white12, height: 20),
           _buildDetailRow(
-            "Valor Total",
+            "Valor Total ",
             _currencyFormat.format(pedido.valorTotal ?? subtotal + freteValor),
             valueColor: Colors.greenAccent,
           ),
@@ -297,7 +309,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
 
           const SizedBox(height: 8),
           _buildDetailRow(
-            "Valor",
+            "Valor ",
             "R\$ ${(item.variante?.valor ?? 0).toStringAsFixed(2)}",
           ),
 
@@ -312,11 +324,11 @@ class _PedidoDetalhePageContent extends StatelessWidget {
             ),
           ),
           _buildDetailRow(
-            "Altura",
+            "Altura ",
             '${item.variante?.medidaProduto.altura} Cm',
           ),
           _buildDetailRow(
-            "Largura",
+            "Largura ",
             '${item.variante?.medidaProduto.largura} Cm',
           ),
           SizedBox(height: 8),
@@ -336,17 +348,15 @@ class _PedidoDetalhePageContent extends StatelessWidget {
   }
 
   Widget _buildPersonalizacaoSection(Map<String, dynamic> personalizacao) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...List.generate(personalizacao.length, (i) {
-            final chave = personalizacao.keys.elementAt(i);
-            final valor = personalizacao.values.elementAt(i);
-            return _buildDetailRow(chave, valor.toString());
-          }),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...List.generate(personalizacao.length, (i) {
+          final chave = personalizacao.keys.elementAt(i);
+          final valor = personalizacao.values.elementAt(i);
+          return _buildDetailRow(chave, valor.toString());
+        }),
+      ],
     );
   }
 
@@ -360,9 +370,9 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDetailRow("Nome", cliente.nome!),
-          _buildDetailRow("Telefone", cliente.telefone!),
-          _buildDetailRow("Email", cliente.email!),
+          _buildDetailRow("Nome ", cliente.nome!),
+          _buildDetailRow("Telefone ", cliente.telefone!),
+          _buildDetailRow("Email ", cliente.email!),
         ],
       ),
     );
@@ -388,12 +398,15 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'ID do Pagamento #${pagamento.id}',
-                style: const TextStyle(
-                  color: branco,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: AutoSizeText(
+                  'ID do Pagamento #${pagamento.id}',
+                  style: const TextStyle(
+                    color: branco,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
                 ),
               ),
               Container(
@@ -402,32 +415,35 @@ class _PedidoDetalhePageContent extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withAlpha((255.0 * 0.2).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  _formatStatusPagamento(pagamento.status).toUpperCase(),
-                  style: TextStyle(
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                child: Expanded(
+                  child: AutoSizeText(
+                    _formatStatusPagamento(pagamento.status).toUpperCase(),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
                   ),
                 ),
               ),
             ],
           ),
           _buildDetailRow(
-            "Uuid",
+            "Uuid ",
             pedido.pagamentos!.idPagamento.toString(),
             valueColor: statusColor,
           ),
 
-          _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorRestante}"),
-          _buildDetailRow("Valor a pago", "R\$ ${pagamento.valorPago}"),
-          _buildDetailRow("Valor a Total", "R\$ ${pagamento.valorTotal}"),
+          _buildDetailRow("Valor a pagar ", "R\$ ${pagamento.valorRestante}"),
+          _buildDetailRow("Valor a pago ", "R\$ ${pagamento.valorPago}"),
+          _buildDetailRow("Valor a Total ", "R\$ ${pagamento.valorTotal}"),
 
           _buildDetailRow(
-            "Data/Hora",
+            "Data/Hora ",
             pedido.dataPedido != null
                 ? DateFormat('dd/MM/yyyy HH:mm').format(pagamento.dataCadastro!)
                 : 'N/A',
@@ -456,7 +472,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           const SizedBox(height: 25),
 
           _buildSectionTitle("📦 Itens (${pedido.itens.length})"),
-          ...pedido.itens.map((item) => _buildItemCard(item)).toList(),
+          ...pedido.itens.map((item) => _buildItemCard(item)),
           const SizedBox(height: 25),
 
           _buildSectionTitle("💳 Pagamento"),
