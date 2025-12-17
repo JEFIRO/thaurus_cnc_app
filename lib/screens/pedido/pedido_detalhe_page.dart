@@ -1,6 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:thaurus_cnc/app_theme.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_item_model.dart';
 import 'package:thaurus_cnc/model/cliente/cliente_model.dart';
@@ -8,24 +8,53 @@ import 'package:thaurus_cnc/model/pagamentos/status_pagamento.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_model.dart';
 import 'package:thaurus_cnc/model/pedido/status_pedido.dart';
 
-import '../../widgets/_FormularioDialog.dart';
-
-enum SampleItem { itemOne, itemTwo, itemThree }
-
 class PedidoDetalhePage extends StatelessWidget {
-  final PedidoModel pedido;
+  final Future<PedidoModel> pedidoFuture;
 
-  const PedidoDetalhePage({super.key, required this.pedido});
+  const PedidoDetalhePage({super.key, required this.pedidoFuture});
 
   @override
   Widget build(BuildContext context) {
+
+    print("object");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detalhes do Pedido"),
         backgroundColor: const Color(0xFF2B2B2B),
       ),
       backgroundColor: const Color(0xFF2B2B2B),
-      body: _PedidoDetalhePageContent(pedido: pedido),
+
+      body: FutureBuilder<PedidoModel>(
+        future: pedidoFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "❌ Erro ao buscar pedido: ${snapshot.error}",
+                style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.amber),
+            );
+          }
+
+          if (snapshot.hasData && snapshot.data != null) {
+            return _PedidoDetalhePageContent(pedido: snapshot.data!);
+          }
+
+          return const Center(
+            child: Text(
+              "Nenhum dado de pedido encontrado.",
+              style: TextStyle(color: Colors.white70),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -124,13 +153,24 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: cinzaMedio, fontSize: 14)),
-          Text(
-            value,
-            style: TextStyle(
-              color: valueColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 15,
+          Expanded(
+            flex: 0,
+            child: AutoSizeText(
+              label,
+              style: const TextStyle(color: cinzaMedio, fontSize: 14),
+              maxLines: 1,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: AutoSizeText(
+              value,
+              style: TextStyle(
+                color: valueColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
+              maxLines: 1,
             ),
           ),
         ],
@@ -164,7 +204,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: cinzaEscuro,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: statusColor.withOpacity(0.5)),
+        border: Border.all(color: statusColor.withAlpha((255.0 * 0.5).round())),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +226,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withAlpha((255.0 * 0.2).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -202,7 +242,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _buildDetailRow(
-            "ID UUID",
+            "ID UUID ",
             pedido.idPedido ?? 'N/A',
             valueColor: cinzaMedio,
           ),
@@ -233,13 +273,11 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Column(
         children: [
           _buildDetailRow("Subtotal Itens", _currencyFormat.format(subtotal)),
-          _buildDetailRow(
-            "Frete (${pedido.frete?.metodo ?? 'Não Definido'})",
-            _currencyFormat.format(freteValor),
-          ),
+          _buildDetailRow("Frete", _currencyFormat.format(freteValor)),
+          _buildDetailRow("(${pedido.frete?.metodo ?? 'Não Definido'})", ""),
           const Divider(color: Colors.white12, height: 20),
           _buildDetailRow(
-            "Valor Total",
+            "Valor Total ",
             _currencyFormat.format(pedido.valorTotal ?? subtotal + freteValor),
             valueColor: Colors.greenAccent,
           ),
@@ -271,7 +309,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
 
           const SizedBox(height: 8),
           _buildDetailRow(
-            "Valor",
+            "Valor ",
             "R\$ ${(item.variante?.valor ?? 0).toStringAsFixed(2)}",
           ),
 
@@ -286,11 +324,11 @@ class _PedidoDetalhePageContent extends StatelessWidget {
             ),
           ),
           _buildDetailRow(
-            "Altura",
+            "Altura ",
             '${item.variante?.medidaProduto.altura} Cm',
           ),
           _buildDetailRow(
-            "Largura",
+            "Largura ",
             '${item.variante?.medidaProduto.largura} Cm',
           ),
           SizedBox(height: 8),
@@ -310,17 +348,15 @@ class _PedidoDetalhePageContent extends StatelessWidget {
   }
 
   Widget _buildPersonalizacaoSection(Map<String, dynamic> personalizacao) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...List.generate(personalizacao.length, (i) {
-            final chave = personalizacao.keys.elementAt(i);
-            final valor = personalizacao.values.elementAt(i);
-            return _buildDetailRow(chave, valor.toString());
-          }),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...List.generate(personalizacao.length, (i) {
+          final chave = personalizacao.keys.elementAt(i);
+          final valor = personalizacao.values.elementAt(i);
+          return _buildDetailRow(chave, valor.toString());
+        }),
+      ],
     );
   }
 
@@ -334,9 +370,9 @@ class _PedidoDetalhePageContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDetailRow("Nome", cliente.nome!),
-          _buildDetailRow("Telefone", cliente.telefone!),
-          _buildDetailRow("Email", cliente.email!),
+          _buildDetailRow("Nome ", cliente.nome!),
+          _buildDetailRow("Telefone ", cliente.telefone!),
+          _buildDetailRow("Email ", cliente.email!),
         ],
       ),
     );
@@ -363,55 +399,51 @@ class _PedidoDetalhePageContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
+                child: AutoSizeText(
                   'ID do Pagamento #${pagamento.id}',
-                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: branco,
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 1,
                 ),
               ),
-
-              const SizedBox(width: 8),
-
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withAlpha((255.0 * 0.2).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  _formatStatusPagamento(pagamento.status).toUpperCase(),
-                  style: TextStyle(
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                child: Expanded(
+                  child: AutoSizeText(
+                    _formatStatusPagamento(pagamento.status).toUpperCase(),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
                   ),
                 ),
               ),
             ],
           ),
-
           _buildDetailRow(
-            "Uuid",
+            "Uuid ",
             pedido.pagamentos!.idPagamento.toString(),
             valueColor: statusColor,
           ),
 
-          _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorRestante}"),
-          _buildDetailRow(
-            "Valor a pagar",
-            "R\$ ${pagamento.valorPago ?? "00,00"}",
-          ),
-          _buildDetailRow("Valor a Total", "R\$ ${pagamento.valorTotal}"),
+          _buildDetailRow("Valor a pagar ", "R\$ ${pagamento.valorRestante}"),
+          _buildDetailRow("Valor a pago ", "R\$ ${pagamento.valorPago}"),
+          _buildDetailRow("Valor a Total ", "R\$ ${pagamento.valorTotal}"),
 
           _buildDetailRow(
-            "Data/Hora",
+            "Data/Hora ",
             pedido.dataPedido != null
                 ? DateFormat('dd/MM/yyyy HH:mm').format(pagamento.dataCadastro!)
                 : 'N/A',
@@ -440,7 +472,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           const SizedBox(height: 25),
 
           _buildSectionTitle("📦 Itens (${pedido.itens.length})"),
-          ...pedido.itens.map((item) => _buildItemCard(item)).toList(),
+          ...pedido.itens.map((item) => _buildItemCard(item)),
           const SizedBox(height: 25),
 
           _buildSectionTitle("💳 Pagamento"),

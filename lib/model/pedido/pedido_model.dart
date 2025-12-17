@@ -4,7 +4,6 @@ import 'package:thaurus_cnc/model/pagamentos/pagamento_model.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_item_model.dart';
 import 'package:thaurus_cnc/model/pedido/status_pedido.dart';
 
-
 class PedidoModel {
   final int? id;
   final String? idPedido;
@@ -35,6 +34,7 @@ class PedidoModel {
   });
 
   factory PedidoModel.fromJson(Map<String, dynamic> json) {
+    print(json['pagamento']);
     return PedidoModel(
       id: json['id'] as int?,
       idPedido: json['id_Pedido'] as String?,
@@ -48,7 +48,6 @@ class PedidoModel {
               json['itens'].map((item) => PedidoItemModel.fromJson(item)),
             )
           : [],
-
       valorTotal: json['valor_total'] != null
           ? (json['valor_total'] as num).toDouble()
           : null,
@@ -58,13 +57,13 @@ class PedidoModel {
           : null,
 
       status: StatusPedidoAdapter.fromString(json['status'] as String?),
-
       frete: json['frete'] != null ? FreteModel.fromJson(json['frete']) : null,
+
+    //  pagamentos: PagamentosModel(dadosPagamentos: []),
 
       pagamentos: json['pagamento'] != null
           ? PagamentosModel.fromJson(json['pagamento'])
           : null,
-
       dataPedido: json['data_pedido'] != null
           ? DateTime.tryParse(json['data_pedido'])
           : null,

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:thaurus_cnc/screens/cliente/cliente_form_page.dart';
-import 'package:thaurus_cnc/screens/cliente/cliente_page.dart';
-import 'package:thaurus_cnc/screens/pedido/pedido_page.dart';
-import 'package:thaurus_cnc/screens/produto/produto_form_page.dart';
-import 'package:thaurus_cnc/screens/produto/produto_page.dart';
+import 'package:thaurus_cnc/routes.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,20 +17,14 @@ class HomePage extends StatelessWidget {
               leading: Icon(Icons.add),
               title: Text("Cadastrar Produto"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProdutoFormPage()),
-                );
+                Navigator.pushNamed(context, Routes.productFormPage);
               },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text("Lista de Produtos"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProdutoPage()),
-                );
+                Navigator.pushNamed(context, Routes.productPage);
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text("Lista de Produtos")));
@@ -44,30 +34,21 @@ class HomePage extends StatelessWidget {
               leading: Icon(Icons.shopping_bag_outlined),
               title: Text("Lista De Pedidos"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PedidoPage()),
-                );
+                Navigator.pushNamed(context, Routes.orderPage);
               },
             ),
             ListTile(
               leading: Icon(Icons.person),
               title: Text("Cadastrar Cliente"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ClienteFormPage()),
-                );
+                Navigator.pushNamed(context, Routes.clientFormPage);
               },
             ),
             ListTile(
               leading: Icon(Icons.person),
               title: Text("Lista de Clientes"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ClientePage()),
-                );
+                Navigator.pushNamed(context, Routes.clientPage);
               },
             ),
           ],
