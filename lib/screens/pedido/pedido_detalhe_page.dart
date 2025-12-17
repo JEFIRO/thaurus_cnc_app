@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:thaurus_cnc/app_theme.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_item_model.dart';
 import 'package:thaurus_cnc/model/cliente/cliente_model.dart';
 import 'package:thaurus_cnc/model/pagamentos/status_pagamento.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_model.dart';
 import 'package:thaurus_cnc/model/pedido/status_pedido.dart';
+
+import '../../widgets/_FormularioDialog.dart';
+
+enum SampleItem { itemOne, itemTwo, itemThree }
 
 class PedidoDetalhePage extends StatelessWidget {
   final PedidoModel pedido;
@@ -357,14 +362,20 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'ID do Pagamento #${pagamento.id}',
-                style: const TextStyle(
-                  color: branco,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  'ID do Pagamento #${pagamento.id}',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: branco,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+
+              const SizedBox(width: 8),
+
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -385,6 +396,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
               ),
             ],
           ),
+
           _buildDetailRow(
             "Uuid",
             pedido.pagamentos!.idPagamento.toString(),
@@ -392,7 +404,10 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           ),
 
           _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorRestante}"),
-          _buildDetailRow("Valor a pagar", "R\$ ${pagamento.valorPago ?? "00,00"}",),
+          _buildDetailRow(
+            "Valor a pagar",
+            "R\$ ${pagamento.valorPago ?? "00,00"}",
+          ),
           _buildDetailRow("Valor a Total", "R\$ ${pagamento.valorTotal}"),
 
           _buildDetailRow(
