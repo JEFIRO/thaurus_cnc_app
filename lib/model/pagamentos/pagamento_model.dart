@@ -1,18 +1,20 @@
 import 'package:thaurus_cnc/model/pagamentos/dados_pagamento_model.dart';
 import 'package:thaurus_cnc/model/pagamentos/status_pagamento.dart';
 
+import 'metodo_pagamento.dart';
+
 class PagamentosModel {
   int? id;
   String? idPagamento;
   int? pedido;
   String? pedidoUuid;
+  double? valorPago;
   double? valorRestante;
   double? valorTotal;
-  double? valorPago;
-  List<DadosPagamentoModel> dadosPagamentos;
   StatusPagamento? status;
   String? observacao;
   DateTime? dataCadastro;
+  MetodoPagamento? metodoPagamento;
 
   PagamentosModel({
     this.id,
@@ -22,10 +24,10 @@ class PagamentosModel {
     this.valorRestante,
     this.valorTotal,
     this.valorPago,
-    required this.dadosPagamentos,
     this.status,
     this.observacao,
     this.dataCadastro,
+    this.metodoPagamento,
   });
 
   factory PagamentosModel.fromJson(Map<String, dynamic> json) {
@@ -37,10 +39,6 @@ class PagamentosModel {
       valorRestante: (json['valorRestante'] as num?)?.toDouble(),
       valorTotal: (json['valorTotal'] as num?)?.toDouble(),
       valorPago: json['valorPago'] ?? 0.00,
-      dadosPagamentos: (json['dadosPagamentos'] as List<dynamic>? ?? [])
-          .map((e) => DadosPagamentoModel.fromJson(e))
-          .toList(),
-
       status: json['status'] != null
           ? StatusPagamento.values.firstWhere(
               (e) => e.toString().split('.').last == json['status'],
@@ -50,6 +48,9 @@ class PagamentosModel {
       dataCadastro: json['data_cadastro'] != null
           ? DateTime.parse(json['data_cadastro'])
           : null,
+      metodoPagamento: MetodoPagamento.values.firstWhere(
+            (e) => e.name == json['metodoPagamento'],
+      ),
     );
   }
 
@@ -62,7 +63,6 @@ class PagamentosModel {
       'valorRestante': valorRestante,
       'valorTotal': valorTotal,
       'valorPago': valorPago,
-      'dadosPagamentos': dadosPagamentos.map((e) => e.toJson()).toList(),
       'status': status?.toString().split('.').last,
       'observacao': observacao,
       'data_cadastro': dataCadastro?.toIso8601String(),

@@ -8,14 +8,15 @@ import 'package:thaurus_cnc/model/pagamentos/status_pagamento.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_model.dart';
 import 'package:thaurus_cnc/model/pedido/status_pedido.dart';
 
-class PedidoDetalhePage extends StatelessWidget {
-  final Future<PedidoModel> pedidoFuture;
+import '../pagamento/pagamento_form.dart';
 
-  const PedidoDetalhePage({super.key, required this.pedidoFuture});
+class PedidoDetalhePage extends StatelessWidget {
+  final PedidoModel pedido;
+
+  const PedidoDetalhePage({super.key, required this.pedido});
 
   @override
   Widget build(BuildContext context) {
-
     print("object");
     return Scaffold(
       appBar: AppBar(
@@ -24,37 +25,7 @@ class PedidoDetalhePage extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFF2B2B2B),
 
-      body: FutureBuilder<PedidoModel>(
-        future: pedidoFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                "❌ Erro ao buscar pedido: ${snapshot.error}",
-                style: const TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.amber),
-            );
-          }
-
-          if (snapshot.hasData && snapshot.data != null) {
-            return _PedidoDetalhePageContent(pedido: snapshot.data!);
-          }
-
-          return const Center(
-            child: Text(
-              "Nenhum dado de pedido encontrado.",
-              style: TextStyle(color: Colors.white70),
-            ),
-          );
-        },
-      ),
+      body: _PedidoDetalhePageContent(pedido: pedido),
     );
   }
 }
@@ -378,7 +349,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentSection() {
+  Widget _buildPaymentSection(BuildContext context) {
     final pagamentoId = pedido.pagamentos?.id;
 
     final pagamento = pedido.pagamentos!;
@@ -448,12 +419,52 @@ class _PedidoDetalhePageContent extends StatelessWidget {
                 ? DateFormat('dd/MM/yyyy HH:mm').format(pagamento.dataCadastro!)
                 : 'N/A',
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+
+                        context ,
+                        MaterialPageRoute(
+                          builder: (context) => PagamentoForm(idPedido: pedido.id!,),
+                        ),
+                      );
+                    },
+
+
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        const Color(0xFF0C3F57),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Registar Pagamento',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // Widget _buildPaymentSection()
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -476,7 +487,7 @@ class _PedidoDetalhePageContent extends StatelessWidget {
           const SizedBox(height: 25),
 
           _buildSectionTitle("💳 Pagamento"),
-          _buildPaymentSection(),
+          _buildPaymentSection(context),
           const SizedBox(height: 40),
         ],
       ),
