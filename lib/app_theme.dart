@@ -7,11 +7,12 @@ class AppTheme {
   static const cinzaClaro = Color(0xFFF1F1F1);
   static const branco = Color(0xFFFFFFFF);
 
+
   static const corDestaque = Color(0xFF0C3F57);
 
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: grafiteProfundo,
+    scaffoldBackgroundColor: corDestaque,
     useMaterial3: true,
 
     colorScheme: const ColorScheme.dark(

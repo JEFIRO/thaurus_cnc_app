@@ -4,6 +4,7 @@ import 'package:thaurus_cnc/routes.dart';
 import 'package:thaurus_cnc/screens/cliente/cliente_form_page.dart';
 import 'package:thaurus_cnc/screens/cliente/cliente_page.dart';
 import 'package:thaurus_cnc/screens/home_page.dart';
+import 'package:thaurus_cnc/screens/pedido/pedido_form_page.dart';
 import 'package:thaurus_cnc/screens/pedido/pedido_page.dart';
 import 'package:thaurus_cnc/screens/produto/produto_form_page.dart';
 import 'package:thaurus_cnc/screens/produto/produto_page.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         Routes.orderPage: (context) => PedidoPage(),
         Routes.clientFormPage: (context) => ClienteFormPage(),
         Routes.clientPage: (context) => ClientePage(),
+        Routes.pedidoFormPage: (context) => PedidoFormPage(),
       },
     );
   }

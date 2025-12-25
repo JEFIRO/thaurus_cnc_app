@@ -5,4 +5,5 @@ class Routes {
   static const String orderPage = '/orderPage';
   static const String clientFormPage = '/clientFormPage';
   static const String clientPage = '/clientPage';
+  static const String pedidoFormPage = '/pedidoFormPage';
 }

@@ -38,6 +38,13 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(Icons.add),
+              title: Text("Cadastrar Pedido"),
+              onTap: () {
+                Navigator.pushNamed(context, Routes.pedidoFormPage);
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.person),
               title: Text("Cadastrar Cliente"),
               onTap: () {
