@@ -120,7 +120,6 @@ class ProdutoDetalhePage extends StatelessWidget {
                 ],
               ),
 
-            // Variantes com ExpansionTile
             if (produto.variantes.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
