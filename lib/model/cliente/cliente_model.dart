@@ -2,6 +2,7 @@ import 'package:thaurus_cnc/model/cliente/endereco_model.dart';
 
 class ClienteModel {
   int? id;
+  String? remoteJid;
   String? nome;
   String? telefone;
   String? email;
@@ -12,6 +13,7 @@ class ClienteModel {
 
   ClienteModel({
     this.id,
+    this.remoteJid,
     this.nome,
     this.telefone,
     this.email,
@@ -24,6 +26,7 @@ class ClienteModel {
   factory ClienteModel.fromJson(Map<String, dynamic> json) {
     return ClienteModel(
       id: json['id'],
+      remoteJid: json['remoteJid'],
       nome: json['nome'],
       telefone: json['telefone'],
       email: json['email'],
@@ -41,6 +44,7 @@ class ClienteModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'remoteJid': remoteJid,
       'nome': nome,
       'telefone': telefone,
       'email': email,

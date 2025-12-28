@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:thaurus_cnc/model/pedido/pedido_list_response.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_model.dart';
+import 'package:thaurus_cnc/model/pedido/pedido_request.dart';
 import 'package:thaurus_cnc/model/pedido/pedido_resumo_model.dart';
 
-class Pedidoservice {
+class PedidoService {
   final String baseUrl = 'https://www.thauruscnc.com.br/api';
 
-  Future<bool> criarProduto(PedidoModel pedido) async {
+  Future<bool> criarProduto(PedidoRequest pedido) async {
     final url = Uri.parse('$baseUrl/pedidos');
 
     final response = await http.post(

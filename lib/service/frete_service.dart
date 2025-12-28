@@ -19,6 +19,7 @@ class FreteService {
     );
 
     if (response.statusCode == 200) {
+      debugPrint(response.body);
       return response.body;
     } else {
       debugPrint('Erro ao calcular frete: ${response.statusCode}');

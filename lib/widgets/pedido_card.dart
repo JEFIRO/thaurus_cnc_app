@@ -53,7 +53,7 @@ class PedidoCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () async {
-          Future<PedidoModel> pedidoResponseFuture = Pedidoservice().getPedido(
+          Future<PedidoModel> pedidoResponseFuture = PedidoService().getPedido(
             pedido.pedidoId,
           );
 

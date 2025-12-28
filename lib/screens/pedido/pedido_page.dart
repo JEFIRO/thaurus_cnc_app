@@ -30,7 +30,7 @@ class _PedidoPageState extends State<PedidoPage> {
 
   Future<void> buscarPedidos() async {
     try {
-      var dados = await Pedidoservice().listarPedidos();
+      var dados = await PedidoService().listarPedidos();
       setState(() {
         pedidos = dados;
         pedidosFiltrados = List.from(pedidos);

@@ -135,12 +135,7 @@ class PedidoFormCardState extends State<PedidoFormCard> {
                         width: 60,
                         height: 60,
                         color: Colors.white24,
-                        child: widget.produto.imagem != null
-                            ? Image.network(
-                                widget.produto.imagem!,
-                                fit: BoxFit.contain,
-                              )
-                            : const Icon(Icons.image_not_supported),
+                        child: widget.produto.imagem != null ? Image.network(widget.produto.imagem!, fit: BoxFit.contain,) : const Icon(Icons.image_not_supported),
                       ),
                     ),
 
